@@ -82,14 +82,26 @@ RUN apt install ros-humble-rosbridge-server -y
 
 #USER $USERNAME
 
-COPY MobileManipulator_website/vue-webpanel /home/$USERNAME/vue-webpanel
-WORKDIR /home/$USERNAME/vue-webpanel
+# COPY MobileManipulator_website/vue-webpanel /home/$USERNAME/vue-webpanel
+
+WORKDIR /home/$USERNAME/
+RUN git clone https://github.com/stebenpe/MobileManipulator_website.git
+
+WORKDIR /home/$USERNAME/MobileManipulator_website/vue-webpanel
 RUN npm install
 
-COPY MobileManipulator_ros2/ros2_ws /home/$USERNAME/ros2_ws
+# COPY MobileManipulator_ros2/ros2_ws /home/$USERNAME/ros2_ws
+RUN git clone https://github.com/stebenpe/MobileManipulator_ros2.git
+
+WORKDIR /home/$USERNAME/MobileManipulator_ros2/ros2_ws
+RUN ["/bin/bash", "-c", "source /usr/$USERNAME/.bashrc \
+    && colcon build --symlink-install" \
+    ]
 
 COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint_headless.sh /entrypoint_headless.sh
 
-ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
+# ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
+ENTRYPOINT [ "/bin/bash", "/entrypoint_headless.sh" ]
 
 CMD ["bash"]
