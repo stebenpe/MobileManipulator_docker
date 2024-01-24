@@ -1,0 +1,1 @@
+docker run --name test_1 -it --net=host --privileged --ipc=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw --env=DISPLAY -v /dev:/dev --device-cgroup-rule='c *:* rmw' jetpack6_ros_test bash

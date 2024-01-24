@@ -1,0 +1,1 @@
+docker build -t jetpack6_ros_test .
