@@ -80,9 +80,11 @@ USER root
 #ros2
 RUN apt install ros-humble-rosbridge-server -y
 
-#USER $USERNAME
-
 # COPY MobileManipulator_website/vue-webpanel /home/$USERNAME/vue-webpanel
+
+# install git lfs
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+RUN sudo apt-get install git-lfs -y
 
 WORKDIR /home/$USERNAME/
 RUN git clone https://github.com/stebenpe/MobileManipulator_website.git
@@ -90,18 +92,24 @@ RUN git clone https://github.com/stebenpe/MobileManipulator_website.git
 WORKDIR /home/$USERNAME/MobileManipulator_website/vue-webpanel
 RUN npm install
 
+WORKDIR /home/$USERNAME/
 # COPY MobileManipulator_ros2/ros2_ws /home/$USERNAME/ros2_ws
 RUN git clone https://github.com/stebenpe/MobileManipulator_ros2.git
 
+# modified selectors2 for ros2 humble
+COPY selectors2.py /usr/local/lib/python3.10/dist-packages/selectors2.py
+
 WORKDIR /home/$USERNAME/MobileManipulator_ros2/ros2_ws
-RUN ["/bin/bash", "-c", "source /usr/$USERNAME/.bashrc \
+RUN ["/bin/bash", "-c", "source /opt/ros/humble/setup.bash \
     && colcon build --symlink-install" \
     ]
 
 COPY entrypoint.sh /entrypoint.sh
 COPY entrypoint_headless.sh /entrypoint_headless.sh
 
+WORKDIR /home/$USERNAME
+
 # ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
-ENTRYPOINT [ "/bin/bash", "/entrypoint_headless.sh" ]
+# ENTRYPOINT [ "/bin/bash", "/entrypoint_headless.sh" ]
 
 CMD ["bash"]

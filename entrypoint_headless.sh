@@ -1,11 +1,9 @@
 #!/bin/bash
 
 source /opt/ros/humble/setup.bash
-source /home/moma/ros2_ws/install/setup.bash
+source /home/moma/MobileManipulator_ros2/ros2_ws/install/setup.bash
 
-cd /home/moma/MobileManipulator_website/vue-webpanel
-
-npm run serve &
+cd /home/moma/MobileManipulator_website/vue-webpanel && npm run serve &
 
 ros2 launch omron_moma server_headless.launch.py robot_ip:=192.168.44.14 &
 
