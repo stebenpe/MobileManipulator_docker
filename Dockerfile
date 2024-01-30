@@ -109,7 +109,7 @@ COPY entrypoint_headless.sh /entrypoint_headless.sh
 
 WORKDIR /home/$USERNAME
 
-# ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
+ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
 # ENTRYPOINT [ "/bin/bash", "/entrypoint_headless.sh" ]
 
 CMD ["bash"]
